@@ -14,6 +14,9 @@
 
 
 
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,37 +30,31 @@ body{
   font-family: Arial, sans-serif;
   background: radial-gradient(circle at top, #1a1a1a, #000);
   color:white;
+  text-align:center;
 }
 
 /* CONTADOR */
-.countdown-container{
-  text-align:center;
-  margin-top:80px;
-}
-
 #countdown{
   display:flex;
   justify-content:center;
   gap:15px;
-  margin-top:20px;
+  margin-top:60px;
   flex-wrap:wrap;
 }
 
 .time-box{
   background: linear-gradient(145deg, #1c1c1c, #000);
-  color: #fff;
-  padding: 18px;
-  border-radius: 14px;
-  width: 85px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.08);
+  padding:18px;
+  border-radius:14px;
+  width:85px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.4);
 }
 
 .time-box span{
   font-size:28px;
   font-weight:bold;
   display:block;
-  animation: pulse 1.5s infinite;
+  animation:pulse 1.5s infinite;
 }
 
 .time-box p{
@@ -66,10 +63,29 @@ body{
   opacity:0.8;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.08); opacity: 0.85; }
-  100% { transform: scale(1); opacity: 1; }
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+  100%{transform:scale(1);}
+}
+
+/* MENSAJE FINAL */
+.event-message{
+  font-size:34px;
+  font-weight:bold;
+  animation:pop 1s infinite alternate;
+}
+
+.event-message span{
+  display:block;
+  font-size:18px;
+  margin-top:10px;
+  opacity:0.8;
+}
+
+@keyframes pop{
+  from{transform:scale(1);}
+  to{transform:scale(1.08);}
 }
 </style>
 
@@ -77,15 +93,13 @@ body{
 
 <body>
 
-<div class="countdown-container">
-  <h2>Falta para el gran día</h2>
+<h2>Falta para el gran día</h2>
 
-  <div id="countdown">
-    <div class="time-box"><span id="days">0</span><p>Días</p></div>
-    <div class="time-box"><span id="hours">0</span><p>Horas</p></div>
-    <div class="time-box"><span id="minutes">0</span><p>Min</p></div>
-    <div class="time-box"><span id="seconds">0</span><p>Seg</p></div>
-  </div>
+<div id="countdown">
+  <div class="time-box"><span id="days">0</span><p>Días</p></div>
+  <div class="time-box"><span id="hours">0</span><p>Horas</p></div>
+  <div class="time-box"><span id="minutes">0</span><p>Min</p></div>
+  <div class="time-box"><span id="seconds">0</span><p>Seg</p></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -98,21 +112,30 @@ const countdown = setInterval(function() {
   const now = new Date().getTime();
   const distance = eventDate - now;
 
-  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  if (distance > 0) {
 
-  document.getElementById("days").innerText = days;
-  document.getElementById("hours").innerText = hours;
-  document.getElementById("minutes").innerText = minutes;
-  document.getElementById("seconds").innerText = seconds;
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  if (distance < 0) {
+    document.getElementById("days").innerText = days;
+    document.getElementById("hours").innerText = hours;
+    document.getElementById("minutes").innerText = minutes;
+    document.getElementById("seconds").innerText = seconds;
+
+  } else {
+
     clearInterval(countdown);
 
     document.body.style.background = "black";
-    document.getElementById("countdown").innerHTML = "🔥 ¡YA ES EL DÍA!";
+
+    document.getElementById("countdown").innerHTML = `
+      <div class="event-message">
+        🎉 ES AHORA 🎉
+        <span>Disfruta la fiesta</span>
+      </div>
+    `;
 
     launchConfetti();
   }
@@ -120,13 +143,12 @@ const countdown = setInterval(function() {
 }, 1000);
 
 function launchConfetti(){
-  var duration = 3 * 1000;
-  var end = Date.now() + duration;
+  var end = Date.now() + 4000;
 
   (function frame() {
     confetti({
-      particleCount: 5,
-      spread: 70,
+      particleCount: 6,
+      spread: 80,
       origin: { y: 0.6 }
     });
 
