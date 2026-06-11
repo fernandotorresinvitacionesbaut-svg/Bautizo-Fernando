@@ -105,58 +105,87 @@ body{
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
+
 const eventDate = new Date("2026-09-05T15:00:00").getTime();
 
-const countdown = setInterval(function() {
+function updateCountdown() {
 
   const now = new Date().getTime();
+
   const distance = eventDate - now;
 
-  if (distance > 0) {
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("days").innerText = days;
-    document.getElementById("hours").innerText = hours;
-    document.getElementById("minutes").innerText = minutes;
-    document.getElementById("seconds").innerText = seconds;
-
-  } else {
-
-    clearInterval(countdown);
+  if (distance <= 0) {
 
     document.body.style.background = "black";
 
     document.getElementById("countdown").innerHTML = `
+
       <div class="event-message">
+
         🎉 ES AHORA 🎉
+
         <span>Disfruta la fiesta</span>
+
       </div>
+
     `;
 
     launchConfetti();
+
+    return;
+
   }
 
-}, 1000);
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("days").innerText = days;
+
+  document.getElementById("hours").innerText = hours;
+
+  document.getElementById("minutes").innerText = minutes;
+
+  document.getElementById("seconds").innerText = seconds;
+
+}
+
+// 👇 evita el “0 al cargar”
+
+updateCountdown();
+
+setInterval(updateCountdown, 1000);
 
 function launchConfetti(){
+
   var end = Date.now() + 4000;
 
   (function frame() {
+
     confetti({
+
       particleCount: 6,
+
       spread: 80,
+
       origin: { y: 0.6 }
+
     });
 
     if (Date.now() < end) {
+
       requestAnimationFrame(frame);
+
     }
+
   }());
+
 }
+
 </script>
 
 </body>
