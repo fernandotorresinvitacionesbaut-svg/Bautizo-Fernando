@@ -1,1 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitación Digital - Bautizo Fernando Antonio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Playfair Display', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* TU IMAGEN DE FONDO */
+            background-image: url('fondo-sobre.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        /* Capa oscura de fondo para dar contraste */
+        body::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6); z-index: -1;
+        }
+
+        /* Contenedor Principal del Sobre */
+        .envelope-container {
+            position: relative;
+            width: 340px;
+            height: 400px;
+            cursor: pointer;
+        }
+
+        /* Base trasera del sobre */
+        .envelope-base {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 250px;
+            background-color: #f3e5ab;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            z-index: 1;
+        }
+
+        /* LA TARJETA INTERIOR (La que sube) */
+        .card {
+            position: absolute;
+            bottom: 30px; left: 5%;
+            width: 90%; height: 230px;
+            background-image: url('preview.jpg'); /* Tu imagen de Mickey o portada */
+            background-size: cover;
+            background-position: center;
+            border-radius: 6px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Transición suave para cuando se deslice */
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Botón "Ver Invitación" que va a Canva */
+        .btn-ver {
+            background-color: rgba(186, 12, 47, 0.85); /* Rojo elegante semi-transparente */
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 12px 24px;
+            border-radius: 4px;
+            opacity: 0; /* Oculto al principio */
+            pointer-events: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+        }
+
+        /* PANEL INFERIOR (Donde dice el texto del bautizo) */
+        .bottom-panel {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 95px;
+            background-color: #e6d79c; /* Tono ligeramente más oscuro como la referencia */
+            border-radius: 0 0 12px 12px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .text-bautizo {
+            color: #2b2008;
+            font-size: 1.15rem;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        .text-invitado {
+            font-family: 'Montserrat', sans-serif;
+            color: #574419;
+            font-size: 0.8rem;
+            margin-top: 4px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* LA SOLAPA (El triángulo que se abre) */
+        .flap {
+            position: absolute;
+            top: 150px; left: 0;
+            width: 100%; height: 155px;
+            background-color: #f3e5ab;
+            /* Triángulo apuntando hacia abajo originalmente */
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            z-index: 6;
+            transition: all 0.5s ease-in-out;
+        }
+
+        /* EL CORAZÓN AZUL */
+        .heart {
+            position: absolute;
+            top: 290px; left: 50%;
+            transform: translateX(-50%);
+            width: 28px; height: 28px;
+            background-color: #0f2c59; /* Azul Rey / Mickey */
+            clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
+            z-index: 7;
+            transition: all 0.4s ease;
+        }
+
+        /* ========================================================
+           ANIMACIONES CUANDO EL SOBRE SE ABRE (Clase .open)
+           ======================================================== */
+
+        /* El triángulo cambia de forma apuntando hacia arriba y sube */
+        .envelope-container.open .flap {
+            top: -5px;
+            height: 155px;
+            clip-path: polygon(50% 0, 100% 100%, 0 100%);
+            z-index: 2; /* Pasa hacia atrás de la tarjeta */
+        }
+
+        /* El corazón se desvanece suavemente al abrirse */
+        .envelope-container.open .heart {
+            opacity: 0;
+            transform: translateX(-50%) translateY(-40px) scale(0.5);
+            pointer-events: none;
+        }
+
+        /* La tarjeta se desliza hacia arriba */
+        .envelope-container.open .card {
+            transform: translateY(-130px);
+        }
+
+        /* El botón se vuelve visible e interactivo */
+        .envelope-container.open .btn-ver {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .btn-ver:hover {
+            background-color: rgba(186, 12, 47, 1);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Contenedor del Sobre interactivo -->
+    <div class="envelope-container" id="sobre" onclick="abrirSobre()">
+        
+        <!-- Tarjeta interna deslizante -->
+        <div class="card">
+            <!-- DIRECCIÓN DIRECTA A TU CANVA -->
+            <a href="https://invitacion-bautizo-fagp.my.canva.site" class="btn-ver" onclick="detenerPropagacion(event)">Ver Invitación</a>
+        </div>
+
+        <!-- Fondo del sobre -->
+        <div class="envelope-base"></div>
+
+        <!-- Solapa del sobre -->
+        <div class="flap"></div>
+
+        <!-- Corazón de cierre (Azul) -->
+        <div class="heart"></div>
+
+        <!-- Panel de texto inferior -->
+        <div class="bottom-panel">
+            <div class="text-bautizo">bautizo Fernando Antonio</div>
+            <!-- Aquí se inyecta el nombre del invitado si usas el link dinámico -->
+            <div class="text-invitado" id="txt-invitado"></div>
+        </div>
+    </div>
+
+    <script>
+        // Función para abrir el sobre al hacer clic
+        function abrirSobre() {
+            document.getElementById('sobre').classList.add('open');
+        }
+
+        // Evita que al darle clic al botón de "Ver Invitación" el sobre intente re-animarse
+        function detenerPropagacion(event) {
+            event.stopPropagation();
+        }
+
+        // Lógica por si quieres seguir usando links personalizados con el nombre del invitado
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const invitado = params.get('invitado');
+            if (invitado) {
+                document.getElementById('txt-invitado').innerText = `Para: ${invitado}`;
+            }
+        });
+    </script>
+
+</body>
+</html>
 
