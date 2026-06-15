@@ -226,30 +226,30 @@
             }
         });
 
-        // Evento principal para abrir el sobre
+               // Evento principal para abrir el sobre
         function abrirSobre() {
             if (sobreAbierto) return; 
             sobreAbierto = true;
             
             document.getElementById('sobre').classList.add('open');
             
-                        // Forzar reproducción de música (Blindado para celulares)
+            // Forzar reproducción de música
             const audio = document.getElementById('musicaDisney');
             if (audio) {
                 audio.muted = false;
                 audio.volume = 1.0;
-                audio.currentTime = 0; 
+                audio.currentTime = 0; // Reinicia el audio
                 
+                // Ponemos un detective: si hay error al cargar, nos avisa
+                audio.addEventListener('error', function() {
+                    alert("⚠️ ERROR: El celular no encuentra tu archivo de música. Revisa si el nombre está bien escrito en GitHub.");
+                }, true);
+
                 audio.play().catch(error => {
-                    console.log("Intentando bypass de silencio para Safari/Android...", error);
-                    // Si el cel se pone estricto, reproduce mudo un instante y le quita el mudo rápido
-                    audio.muted = true;
-                    audio.play().then(() => {
-                        setTimeout(() => { audio.muted = false; }, 50);
-                    });
+                    // Si el navegador bloqueó el audio por seguridad, nos avisa aquí
+                    alert("⚠️ BLOQUEO: El navegador bloqueó el audio. Detalle: " + error.message);
                 });
             }
-
 
             // Gran lluvia de brillos de gala
             confetti({
@@ -261,6 +261,7 @@
                 scalar: 1.1
             });
         }
+
 
         function detenerPropagacion(event) {
             event.stopPropagation();
