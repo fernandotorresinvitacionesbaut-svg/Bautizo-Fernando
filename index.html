@@ -172,10 +172,11 @@
 </head>
 <body>
 
-    <!-- REPRODUCTOR DE AUDIO -->
+        <!-- REPRODUCTOR DE AUDIO -->
     <audio id="musicaDisney" preload="auto">
-        <source src="música.mp3.m4a" type="audio/mpeg">
+        <source src="música.mp3.m4a" type="audio/mp4">
     </audio>
+
 
     <div class="envelope-container" id="sobre" onclick="abrirSobre()">
         
@@ -232,14 +233,23 @@
             
             document.getElementById('sobre').classList.add('open');
             
-            // Forzar reproducción de música
+                        // Forzar reproducción de música (Blindado para celulares)
             const audio = document.getElementById('musicaDisney');
             if (audio) {
-                audio.currentTime = 0; // Reinicia el audio por si acaso
+                audio.muted = false;
+                audio.volume = 1.0;
+                audio.currentTime = 0; 
+                
                 audio.play().catch(error => {
-                    console.log("Interacción bloqueada o archivo no encontrado:", error);
+                    console.log("Intentando bypass de silencio para Safari/Android...", error);
+                    // Si el cel se pone estricto, reproduce mudo un instante y le quita el mudo rápido
+                    audio.muted = true;
+                    audio.play().then(() => {
+                        setTimeout(() => { audio.muted = false; }, 50);
+                    });
                 });
             }
+
 
             // Gran lluvia de brillos de gala
             confetti({
