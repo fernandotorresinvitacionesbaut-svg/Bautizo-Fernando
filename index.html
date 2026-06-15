@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Invitación</title>
+
+  <style>
+
+    body {
+
+      margin: 0;
+
+      height: 100vh;
+
+      display: flex;
+
+      justify-content: center;
+
+      align-items: center;
+
+      background: linear-gradient(135deg, #f5f5f5, #eaeaea);
+
+      font-family: Arial, sans-serif;
+
+    }
+
+    .envelope {
+
+      width: 220px;
+
+      height: 140px;
+
+      background: #e74c3c;
+
+      position: relative;
+
+      border-radius: 12px;
+
+      cursor: pointer;
+
+      transition: transform 0.3s ease;
+
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+    }
+
+    .envelope:hover {
+
+      transform: scale(1.05);
+
+    }
+
+    .flap {
+
+      position: absolute;
+
+      top: 0;
+
+      width: 0;
+
+      height: 0;
+
+      border-left: 110px solid transparent;
+
+      border-right: 110px solid transparent;
+
+      border-bottom: 80px solid #c0392b;
+
+    }
+
+    .text {
+
+      position: absolute;
+
+      bottom: 15px;
+
+      width: 100%;
+
+      text-align: center;
+
+      color: white;
+
+      font-weight: bold;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="envelope" onclick="openInvite()">
+
+    <div class="flap"></div>
+
+    <div class="text">Toca para abrir 💌</div>
+
+  </div>
+
+  <script>
+
+    function openInvite() {
+
+      window.location.href = "invitacion.html";
+
+    }
+
+  </script>
+
+</body>
+
+</html>
