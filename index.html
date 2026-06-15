@@ -6,7 +6,7 @@
     <title>Invitación Digital - Bautizo Fernando Antonio</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
     
-    <!-- Librería mágica para el confeti/brillos (Carga súper rápido) -->
+    <!-- Librería para el confeti/brillos -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -17,7 +17,9 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-image: url('fondo-sobre.jpg'); 
+        
+            background-image: url('fondo-sobre.JPG'); 
+            
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -46,9 +48,10 @@
             z-index: 1;
         }
 
+        /* LA TARJETA INTERIOR (Estrategia Invisible al inicio para que no se asome) */
         .card {
             position: absolute;
-            bottom: 20px; left: 5%;
+            bottom: 60px; left: 5%;
             width: 90%; height: 220px;
             background-image: url('preview.jpg'); 
             background-size: cover;
@@ -59,12 +62,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transform: translateY(120px); 
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            
+            /* Corrección aquí: 100% invisible y ligeramente encogida adentro */
+            opacity: 0;
+            transform: scale(0.85) translateY(30px); 
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
         }
 
         .btn-ver {
-            background-color: rgba(186, 12, 47, 0.85); 
+            background-color: rgba(186, 12, 47, 0.9); 
             color: #ffffff;
             text-decoration: none;
             font-family: 'Montserrat', sans-serif;
@@ -145,8 +151,10 @@
             pointer-events: none;
         }
 
+        /* La tarjeta aparece majestuosamente sin romper el fondo */
         .envelope-container.open .card {
-            transform: translateY(-130px);
+            opacity: 1;
+            transform: scale(1) translateY(-140px);
         }
 
         .envelope-container.open .btn-ver {
@@ -162,8 +170,10 @@
 </head>
 <body>
 
-    <!-- REPRODUCTOR DE AUDIO OCULTO -->
-    <audio id="musicaDisney" src="musica.mp3" preload="auto"></audio>
+    <!-- REPRODUCTOR CON CONFIGURACIÓN DE AUDIO MÁS COMPATIBLE -->
+    <audio id="musicaDisney" preload="auto">
+        <source src="musica.mp3.m4a" type="audio/mpeg">
+    </audio>
 
     <div class="envelope-container" id="sobre" onclick="abrirSobre()">
         <div class="card">
@@ -180,47 +190,60 @@
 
     <script>
         let sobreAbierto = false;
+        const coloresDisney = ['#d4af37', '#0f2c59', '#ffffff', '#f3e5ab'];
 
-        function abrirSobre() {
-            // Evitamos que vuelva a disparar los brillos si ya está abierto
-            if (sobreAbierto) return; 
-            
-            sobreAbierto = true;
-            document.getElementById('sobre').classList.add('open');
-            
-            // 1. REPRODUCIR MÚSICA
-            const musica = document.getElementById('musicaDisney');
-            musica.play().catch(error => {
-                console.log("El navegador bloqueó el audio temporalmente:", error);
-            });
-
-            // 2. DISPARAR RÁFAGA DE BRILLOS/CONFETI ESTILO DISNEY
-            // Combinación de Colores: Dorado brillante, Azul Rey, Blanco y Crema
-            const coloresDisney = ['#d4af37', '#0f2c59', '#ffffff', '#f3e5ab'];
-            
-            confetti({
-                particleCount: 180,
-                spread: 85,
-                origin: { y: 0.6 },
-                colors: coloresDisney,
-                gravity: 0.8,    // Caída un poco más suave
-                scalar: 1.2      // Brillos ligeramente más notables
-            });
-        }
-
-        function detenerPropagacion(event) {
-            event.stopPropagation();
-        }
-
+        // 1. Brillos al entrar
         window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                confetti({
+                    particleCount: 80,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: coloresDisney,
+                    gravity: 1.2
+                });
+            }, 500);
+
             const params = new URLSearchParams(window.location.search);
             const invitado = params.get('invitado');
             if (invitado) {
                 document.getElementById('txt-invitado').innerText = `Para: ${invitado}`;
             }
         });
+
+        // 2. Abrir sobre, Brillos premium y Música
+        function abrirSobre() {
+            if (sobreAbierto) return; 
+            sobreAbierto = true;
+            
+            document.getElementById('sobre').classList.add('open');
+            
+            // Intento forzado de reproducción de música
+            const audio = document.getElementById('musicaDisney');
+            if (audio) {
+                audio.volume = 0.8; // Volumen al 80%
+                audio.play().then(() => {
+                    console.log("Música sonando perfectamente.");
+                }).catch(error => {
+                    console.log("Error al reproducir audio: ", error);
+                });
+            }
+
+            // Ráfaga de gala
+            confetti({
+                particleCount: 180,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: coloresDisney,
+                gravity: 0.8,
+                scalar: 1.2
+            });
+        }
+
+        function detenerPropagacion(event) {
+            event.stopPropagation();
+        }
     </script>
 
 </body>
 </html>
-
