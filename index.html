@@ -16,7 +16,7 @@
       overflow: hidden;
     }
 
-    /* glow elegante */
+    /* glow pro */
     .glow {
       position: absolute;
       width: 500px;
@@ -35,7 +35,7 @@
       width: 280px;
       height: 170px;
       position: relative;
-      background: #f5f0e6; /* crema */
+      background: #f5f0e6;
       border-radius: 14px;
       cursor: pointer;
       box-shadow: 0 25px 60px rgba(0,0,0,0.4);
@@ -46,7 +46,6 @@
       transform: scale(1.05);
     }
 
-    /* solapa */
     .flap {
       position: absolute;
       top: 0;
@@ -67,12 +66,11 @@
       letter-spacing: 1px;
     }
 
-    /* estado abierto */
+    /* animación abrir */
     .open {
       transform: translateY(-30px) scale(1.2);
       opacity: 0;
     }
-
   </style>
 </head>
 
@@ -98,18 +96,18 @@
       if (opened) return;
       opened = true;
 
-      // música
+      // 🎵 música (si existe)
       const music = document.getElementById("music");
       music.play().catch(() => {
         document.addEventListener("click", () => music.play(), { once: true });
       });
 
-      // animación
+      // 💌 animación
       document.getElementById("env").classList.add("open");
 
-      // redirección
+      // ⏭ redirección a Canva
       setTimeout(() => {
-        window.location.href = "invitacion.html";
+        window.location.href = "https://invitacion-bautizo-fagp.my.canva.site/";
       }, 900);
     }
   </script>
