@@ -1,116 +1,159 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Invitación</title>
+<meta charset="UTF-8">
+<title>Invitación</title>
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0b3dff; /* azul eléctrico */
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #0b3dff;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
 
-    /* glow pro */
-    .glow {
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 60%);
-      animation: float 4s ease-in-out infinite;
-    }
+/* 🌟 fondo glow */
+.glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 60%);
+  animation: float 5s ease-in-out infinite;
+}
 
-    @keyframes float {
-      0%,100% { transform: scale(1); opacity: 0.4; }
-      50% { transform: scale(1.15); opacity: 0.2; }
-    }
+@keyframes float {
+  0%,100% { transform: scale(1); opacity: 0.3; }
+  50% { transform: scale(1.2); opacity: 0.15; }
+}
 
-    /* 💌 sobre crema */
-    .envelope {
-      width: 280px;
-      height: 170px;
-      position: relative;
-      background: #f5f0e6;
-      border-radius: 14px;
-      cursor: pointer;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-      transition: transform 0.4s ease, opacity 0.6s ease;
-    }
+/* 💌 sobre */
+.envelope {
+  width: 300px;
+  height: 190px;
+  background: #f5f0e6;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.5);
+  transition: transform 0.5s ease;
+  overflow: hidden;
+}
 
-    .envelope:hover {
-      transform: scale(1.05);
-    }
+/* solapa */
+.flap {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 150px solid transparent;
+  border-right: 150px solid transparent;
+  border-bottom: 110px solid #e8dcc9;
+}
 
-    .flap {
-      position: absolute;
-      top: 0;
-      width: 0;
-      height: 0;
-      border-left: 140px solid transparent;
-      border-right: 140px solid transparent;
-      border-bottom: 95px solid #e8dcc9;
-    }
+/* texto */
+.text {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  color: #1a1a1a;
+}
 
-    .text {
-      position: absolute;
-      bottom: 18px;
-      width: 100%;
-      text-align: center;
-      color: #1a1a1a;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
+/* ✉️ carta */
+.card {
+  position: absolute;
+  width: 260px;
+  height: 160px;
+  background: white;
+  top: 20px;
+  left: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  transform: translateY(120px);
+  transition: all 0.8s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
 
-    /* animación abrir */
-    .open {
-      transform: translateY(-30px) scale(1.2);
-      opacity: 0;
-    }
-  </style>
+/* animaciones activas */
+.open .card {
+  transform: translateY(-60px);
+}
+
+.open {
+  transform: scale(1.05);
+}
+
+/* confeti canvas */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="glow"></div>
+<div class="glow"></div>
 
-  <!-- 🎵 música -->
-  <audio id="music" loop>
-    <source src="musica.mp3" type="audio/mp3">
-  </audio>
+<!-- 🎵 música -->
+<audio id="music" loop>
+  <source src="musica.mp3" type="audio/mp3">
+</audio>
 
-  <!-- 💌 sobre -->
-  <div class="envelope" id="env" onclick="openInvite()">
-    <div class="flap"></div>
-    <div class="text">Toca para abrir 💌</div>
-  </div>
+<!-- 💌 sobre -->
+<div class="envelope" id="env" onclick="openInvite()">
+  <div class="flap"></div>
 
-  <script>
-    let opened = false;
+  <div class="card">🎉 Invitación lista</div>
 
-    function openInvite() {
-      if (opened) return;
-      opened = true;
+  <div class="text">Toca para abrir 💌</div>
+</div>
 
-      // 🎵 música (si existe)
-      const music = document.getElementById("music");
-      music.play().catch(() => {
-        document.addEventListener("click", () => music.play(), { once: true });
-      });
+<canvas id="confetti"></canvas>
 
-      // 💌 animación
-      document.getElementById("env").classList.add("open");
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-      // ⏭ redirección a Canva
-      setTimeout(() => {
-        window.location.href = "https://invitacion-bautizo-fagp.my.canva.site/";
-      }, 900);
-    }
-  </script>
+<script>
+let opened = false;
+
+function openInvite() {
+  if (opened) return;
+  opened = true;
+
+  const env = document.getElementById("env");
+
+  // 🎵 música
+  const music = document.getElementById("music");
+  music.play().catch(() => {
+    document.addEventListener("click", () => music.play(), { once: true });
+  });
+
+  // 💌 abrir sobre + carta sale
+  env.classList.add("open");
+
+  // 🎉 confeti
+  confetti({
+    particleCount: 200,
+    spread: 90,
+    origin: { y: 0.6 }
+  });
+
+  // ⏭ redirección a Canva
+  setTimeout(() => {
+    window.location.href =
+      "https://invitacion-bautizo-fagp.my.canva.site/";
+  }, 2500);
+}
+</script>
 
 </body>
 </html>
