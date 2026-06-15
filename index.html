@@ -11,114 +11,95 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  background: radial-gradient(circle at top, #0b3dff, #0626a8);
+  background:#ffffff;
   font-family: Arial, sans-serif;
   overflow:hidden;
 }
 
-/* glow */
-.glow{
-  position:absolute;
-  width:500px;
-  height:500px;
-  background: radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%);
-  animation: float 5s ease-in-out infinite;
-}
-
-@keyframes float{
-  0%,100%{transform:scale(1);opacity:0.3;}
-  50%{transform:scale(1.15);opacity:0.15;}
+/* contenedor */
+.container{
+  text-align:center;
+  animation: fadeIn 1s ease;
 }
 
 /* sobre */
 .envelope{
-  width:300px;
-  height:180px;
-  background:#f5f0e6;
-  border-radius:14px;
+  width:280px;
+  height:170px;
+  background:#f3f3f3;
+  border-radius:12px;
+  margin:auto;
   position:relative;
   cursor:pointer;
-  box-shadow:0 25px 70px rgba(0,0,0,0.4);
-  transition:0.6s ease;
-  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,0.15);
+  transition:0.3s;
 }
 
+.envelope:hover{
+  transform:scale(1.05);
+}
+
+/* solapa */
 .flap{
   position:absolute;
   top:0;
   width:0;
   height:0;
-  border-left:150px solid transparent;
-  border-right:150px solid transparent;
-  border-bottom:100px solid #e8dcc9;
-  transition:0.6s ease;
+  border-left:140px solid transparent;
+  border-right:140px solid transparent;
+  border-bottom:90px solid #e0e0e0;
 }
 
-/* carta */
-.card{
-  position:absolute;
-  width:260px;
-  height:150px;
-  background:white;
-  top:20px;
-  left:20px;
-  border-radius:10px;
-  transform:translateY(120px);
-  transition:0.8s ease;
-  display:flex;
-  justify-content:center;
-  align-items:center;
+/* texto principal */
+.title{
+  margin-top:20px;
+  font-size:18px;
   font-weight:bold;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
-}
-
-.text{
-  position:absolute;
-  bottom:15px;
-  width:100%;
-  text-align:center;
-  font-weight:bold;
-  color:#1a1a1a;
-}
-
-/* abierto */
-.open .card{
-  transform:translateY(-60px);
-}
-
-.open .flap{
   opacity:0;
-  transform:rotateX(180deg);
+  transform:translateY(20px);
+  animation: slideUp 1.2s forwards;
 }
 
-.open{
-  transform:scale(1.05);
+/* subtexto */
+.subtitle{
+  margin-top:10px;
+  color:#444;
+  opacity:0;
+  transform:translateY(20px);
+  animation: slideUp 1.5s forwards;
 }
 
-/* canvas confeti */
-canvas{
-  position:absolute;
-  top:0;
-  left:0;
+/* animaciones */
+@keyframes slideUp{
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="glow"></div>
-
 <audio id="music" loop>
   <source src="musica.mp3" type="audio/mp3">
 </audio>
 
-<div class="envelope" id="env" onclick="openInvite()">
-  <div class="flap"></div>
-  <div class="card">🎉 Invitación</div>
-  <div class="text">Toca para abrir 💌</div>
-</div>
+<div class="container" onclick="openInvite()">
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <div class="envelope">
+    <div class="flap"></div>
+  </div>
+
+  <div class="title">Abre esta invitación 💌</div>
+  <div class="subtitle">Bautizo Fernando Antonio</div>
+
+</div>
 
 <script>
 let opened = false;
@@ -127,25 +108,17 @@ function openInvite(){
   if(opened) return;
   opened = true;
 
-  const env = document.getElementById("env");
-
+  // música
   const music = document.getElementById("music");
   music.play().catch(()=>{
     document.addEventListener("click", ()=>music.play(), {once:true});
   });
 
-  env.classList.add("open");
-
-  confetti({
-    particleCount: 180,
-    spread: 90,
-    origin: { y: 0.6 }
-  });
-
+  // redirección a Canva
   setTimeout(()=>{
     window.location.href =
       "https://invitacion-bautizo-fagp.my.canva.site/";
-  }, 2000);
+  }, 1500);
 }
 </script>
 
